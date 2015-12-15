@@ -8,7 +8,7 @@
 */
 typedef struct		s_ps
 {
-	int				err;
+	const char		*err;
 	t_dlist			*a;
 	t_dlist			*b;
 }					t_ps;
@@ -18,6 +18,12 @@ typedef struct		s_ps
 ** reader.c
 */
 void				ft_ps_reader_parse_arg(char **av, int ac);
+
+/*
+** print.c
+*/
+void				ft_ps_print_status(void);
+void				ft_ps_print_list(t_dlist *lst, const char *before);
 
 /*
 ** push_swap.c

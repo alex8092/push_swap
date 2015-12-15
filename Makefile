@@ -28,8 +28,11 @@ all: lib $(NAME)
 lib:
 	make -C libft
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) libft/libft.a
 	$(CC) -o $@ $^ $(LDFLAGS)
+
+libft/libft.a:
+	make -C libft
 
 obj/%.o: src/%.c include/push_swap.h
 	mkdir -p $(dir $@)
@@ -45,4 +48,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re lib
+.PHONY: all clean fclean re
