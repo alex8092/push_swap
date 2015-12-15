@@ -16,7 +16,6 @@
 t_printer	*ft_printer_addn(const char *str, size_t size)
 {
 	static t_printer	*inst = 0;
-	char				*tmp;
 
 	if (!inst)
 		inst = ft_printer();
@@ -26,8 +25,7 @@ t_printer	*ft_printer_addn(const char *str, size_t size)
 	inst->size += size;
 	if (inst->v_autoflush)
 	{
-		while ((tmp = ft_strchr(inst->buffer, '\n')))
-			ft_printer_flushn(tmp - inst->buffer + 1);
+		ft_printer_flush();
 	}
 	return (inst);
 }

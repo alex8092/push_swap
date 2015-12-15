@@ -13,6 +13,8 @@ t_dlist				*ft_dlist_push_front(t_dlist *lst, t_dlist_it *item)
 	else
 	{
 		lst->begin->prev = item;
+		item->next = lst->begin;
+		item->prev = 0;
 		lst->begin = item;
 		++lst->size;
 	}

@@ -1,4 +1,5 @@
 #include "ft_dlist.h"
+#include "ft_common.h"
 
 t_dlist_it		*ft_dlist_it_new(void *value)
 {

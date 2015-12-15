@@ -3,19 +3,19 @@
 
 # include <unistd.h>
 
-typedef struct			s_dlist
-{
-	t_dlist_it			*begin;
-	t_dlist_it			*end;
-	size_t				size;
-}						t_dlist;
-
 typedef struct			s_dlist_it
 {
 	void				*value;
 	struct s_dlist_it	*next;
 	struct s_dlist_it	*prev;
 }						t_dlist_it;
+
+typedef struct			s_dlist
+{
+	t_dlist_it			*begin;
+	t_dlist_it			*end;
+	size_t				size;
+}						t_dlist;
 
 t_dlist					*ft_dlist_new(void);
 t_dlist_it				*ft_dlist_it_new(void *value);
