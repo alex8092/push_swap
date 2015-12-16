@@ -21,5 +21,7 @@ int	main(int ac, char **av)
 	}
 	if (ft_flagger_has_flag('i', "interactive"))
 		ft_ps_start_shell();
+	else
+		ft_ps_resolve();
 	return (0);
 }

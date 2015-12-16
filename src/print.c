@@ -11,12 +11,12 @@ void				ft_ps_print_list(t_dlist *lst, const char *before)
 	if (before)
 		ss->add(ss, "[")->add(ss, before)->add(ss, "]");
 	ss->add(ss, "-> ");
-	current = (lst) ? lst->end : 0;
+	current = (lst) ? lst->begin : 0;
 	while (current)
 	{
 		ss->v_min_field_width = 4;
 		ss->addc(ss, ' ')->addl(ss, (int)(size_t)current->value);
-		current = current->prev;
+		current = current->next;
 	}
 	ft_printer_init(1)->addss(ss)->addc('\n');
 	ft_sstream_del(ss);

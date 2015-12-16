@@ -59,6 +59,7 @@ t_bool				ft_ps_do_op(const char *op)
 		if (!ft_strcmp(ops[i].name, op))
 		{
 			ops[i].exec();
+			printf("op [%s]\n", ops[i].name);
 			return (true);
 		}
 		++i;

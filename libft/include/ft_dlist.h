@@ -16,6 +16,7 @@ typedef struct			s_dlist
 	t_dlist_it			*begin;
 	t_dlist_it			*end;
 	size_t				size;
+	void				*data;
 }						t_dlist;
 
 t_dlist					*ft_dlist_new(void);

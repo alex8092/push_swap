@@ -88,6 +88,8 @@ void				ft_ps_reader_parse_arg(char **av, int ac)
 	ps = ft_ps_get_instance();
 	ps->b = ft_dlist_new();
 	ps->a = ft_dlist_new();
+	ps->a->data = ft_memalloc(sizeof(t_lstinfo));
+	ps->b->data = ft_memalloc(sizeof(t_lstinfo));
 	i = 0;
 	while (i < ac && is_valid_digit(prepare(av[i])))
 	{
