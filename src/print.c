@@ -15,7 +15,7 @@ void				ft_ps_print_list(t_dlist *lst, const char *before)
 	while (current)
 	{
 		ss->v_min_field_width = 4;
-		ss->addc(ss, ' ')->addl(ss, (int)current->value);
+		ss->addc(ss, ' ')->addl(ss, (int)(size_t)current->value);
 		current = current->prev;
 	}
 	ft_printer_init(1)->addss(ss)->addc('\n');

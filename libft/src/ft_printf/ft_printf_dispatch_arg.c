@@ -207,7 +207,6 @@ static void		f_do2(t_printf *inst)
 void			ft_printf_dispatch_arg(void)
 {
 	static t_printf		*inst = 0;
-	size_t				last_index;
 
 	if (!inst)
 		inst = ft_printf_instance();
@@ -215,7 +214,6 @@ void			ft_printf_dispatch_arg(void)
 	inst->type_modifier = 0;
 	while (1 && inst->str[inst->index])
 	{
-		last_index = inst->index;
 		f_do(inst);
 		f_do2(inst);
 		break ;
