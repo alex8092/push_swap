@@ -1,6 +1,7 @@
 #include "push_swap.h"
 #include "ft_common.h"
 #include "ft_printf.h"
+#include <stdio.h>
 
 static int			is_out_of_bound(const char *arg, int neg)
 {
@@ -39,16 +40,19 @@ static int			is_valid_digit(const char *arg)
 	return (1);
 }
 
-static int			is_unique(t_dlist *lst, ssize_t n)
+static int			is_unique(t_clist *lst, ssize_t n)
 {
-	t_dlist_it		*current;
+	size_t			i;
+	t_clist_it		*current;
 
-	current = lst->begin;
-	while (current)
+	current = lst->current;
+	i = 0;
+	while (i < lst->size)
 	{
 		if (((ssize_t)current->value) == n)
 			return (0);
 		current = current->next;
+		++i;
 	}
 	return (1);
 }
@@ -86,8 +90,8 @@ void				ft_ps_reader_parse_arg(char **av, int ac)
 	ssize_t			n;
 
 	ps = ft_ps_get_instance();
-	ps->b = ft_dlist_new();
-	ps->a = ft_dlist_new();
+	ps->b = ft_clist_new();
+	ps->a = ft_clist_new();
 	ps->a->data = ft_memalloc(sizeof(t_lstinfo));
 	ps->b->data = ft_memalloc(sizeof(t_lstinfo));
 	i = 0;
@@ -96,7 +100,7 @@ void				ft_ps_reader_parse_arg(char **av, int ac)
 		n = (ssize_t)ft_atoi(prepare(av[i]));
 		if (!is_unique(ps->a, n))
 			break ;
-		ps->a = ft_dlist_push_back(ps->a, ft_dlist_it_new((void *)n));
+		ps->a->push_back(ps->a, ft_clist_it_new((void *)n));
 		++i;
 	}
 	if (i != ac)

@@ -1,87 +1,155 @@
 #include "push_swap.h"
+#include <stdio.h>
 
-static void	ft_ps_resolve_begin(size_t n, size_t length)
+static t_bool	do_swap(t_ps *ps)
 {
-	size_t	i;
+	ssize_t			b_value;
+	const ssize_t	a_value = (ssize_t)ps->a->current->value;
+	const ssize_t	a_prev_value = (ssize_t)ps->a->current->prev->value;
+	// const ssize_t	a_min = ((t_lstinfo *)ps->a->data)->min;
+	// const ssize_t	a_max = ((t_lstinfo *)ps->a->data)->max;
 
-	i = 0;
-	while (i++ < n)
-		ft_ps_do_op("ra");
-	if (length == 1)
-		ft_ps_do_op("pb");
-	else if (length == 2)
-		ft_ps_do_op("sa");
-	else
-	{
-		i = 0;
-		while (i++ < length)
-		{
-			ft_ps_do_op("pb");
-			ft_ps_do_op("rb");
-		}
-	}
+	if (!ps->b->size)
+		return (false);
+	b_value = (ssize_t)ps->b->current->value;
+	if (b_value < a_value && b_value > a_prev_value)
+		return (true);
+	return (false);
 }
 
-static void	ft_ps_resolve_end(size_t n, size_t length)
+static void	ft_ps_resolve_begin(t_ps *ps, t_search *info, size_t *c)
 {
 	size_t	i;
 
 	i = 0;
-	while (i++ < n)
-		ft_ps_do_op("rra");
-	if (length == 1)
+	while (i++ < info->pos)
 	{
-		ft_ps_do_op("rra");
-		ft_ps_do_op("pb");
+		++(*c);
+		ft_ps_do_op("ra");
 	}
-	else if (length == 2)
+	if (info->len == 1)
 	{
-		ft_ps_do_op("rra");
-		ft_ps_do_op("rra");
+		ft_ps_do_op("pb");
+		++(*c);
+	}
+	else if (info->len == 2 || info->len == 3)
+	{
 		ft_ps_do_op("sa");
+		++(*c);
 	}
 	else
 	{
 		i = 0;
-		while (i++ < length)
+		while (i++ < info->len)
+		{
+			ft_ps_do_op("pb");
+			// if (!info->reverse)
+				ft_ps_do_op("rb");
+			(*c) += 2;
+		}
+	}
+	(void)ps;
+}
+
+static void	ft_ps_resolve_end(t_ps *ps, t_search *info, size_t *c)
+{
+	size_t	i;
+
+	i = 0;
+	if (i++ < info->pos)
+	{
+		ft_ps_do_op("rra");
+		++(*c);
+		// while (ps->b->size != 0 && 
+		// 	(ssize_t)ps->b->current->value < (ssize_t)ps->a->current->value && 
+		// 	(ssize_t)ps->b->current->value > (ssize_t)ps->a->current->prev->value)
+		// {
+		// 	ft_ps_do_op("pa");
+		// 	++(*c);
+		// }
+		(void)ps;
+	}
+	if (info->len == 1)
+	{
+		ft_ps_do_op("rra");
+		ft_ps_do_op("pb");
+		(*c) += 2;
+	}
+	else if (info->len == 2)
+	{
+		ft_ps_do_op("rra");
+		ft_ps_do_op("rra");
+		ft_ps_do_op("sa");
+		(*c) += 3;
+	}
+	else
+	{
+		i = 0;
+		while (i++ < info->len)
 		{
 			ft_ps_do_op("rra");
 			ft_ps_do_op("pb");
+			(*c) += 2;
 		}
 	}
 }
 
 void		ft_ps_resolve(void)
 {
-	t_dlist		*a;
-	size_t		i;
-	size_t		databegin[3];
-	size_t		dataend[3];
+	static t_ps		*ps = 0;
+	size_t			i;
+	t_search		*begin;
+	t_search		*end;
 
+	if (!ps)
+		ps = ft_ps_get_instance();
 	i = 0;
-	a = ft_ps_get_instance()->a;
-	ft_ps_print_status();
-	while (!ft_ps_is_sort(a))
+	// ft_ps_print_status();
+	while (!ft_ps_is_sort(ps->a))
 	{
-		// find_next_swap(a);
-		ft_ps_print_status();
-		databegin[0] = ft_ps_find_begin_anomaly(a);
-		databegin[1] = ft_ps_find_length_begin(a, databegin[0]);
-		databegin[2] = ft_ps_cost_begin(databegin[0], databegin[1]);
-		printf("begin pos(%ld), length(%ld), cost(%ld)\n", databegin[0], databegin[1], databegin[2]);
-		dataend[0] = ft_ps_find_end_anomaly(a);
-		dataend[1] = ft_ps_find_length_end(a, dataend[0]);
-		dataend[2] = ft_ps_cost_end(dataend[0], dataend[1]);
-		printf("end pos(%ld), length(%ld), cost(%ld)\n", dataend[0], dataend[1], dataend[2]);
-		// if (databegin[2] < dataend[2])
-		// 	ft_ps_resolve_begin(databegin[0], databegin[1]);
+		// ft_ps_print_status();
+		if ((ssize_t)ps->a->current->value > (ssize_t)ps->a->current->next->value && \
+			(ssize_t)ps->a->current->value != ((t_lstinfo *)ps->a->data)->max)
+		{
+			ft_ps_do_op("sa");
+			ft_ps_do_op("ra");
+			i += 2;
+		}
+		else if ((ssize_t)ps->a->current->prev->value < (ssize_t)ps->a->current->prev->prev->value && \
+			(ssize_t)ps->a->current->prev->value != ((t_lstinfo *)ps->a->data)->min)
+		{
+			ft_ps_do_op("rra");
+			ft_ps_do_op("rra");
+			ft_ps_do_op("sa");
+			i += 3;
+		}
+		else
+			ft_os_do_op("ra");
 		// else
-		// 	ft_ps_resolve_end(dataend[0], dataend[1]);
-		++i;
-		break ;
+		// {
+		// 	begin = ft_ps_search_begin(ps->a);
+		// 	// printf("begin pos(%zu), len(%zu), cost(%zu), reverse(%d)\n", begin->pos, begin->len, begin->cost, begin->reverse);
+		// 	end = ft_ps_search_end(ps->a);
+		// 	// printf("end pos(%zu), len(%zu), cost(%zu), reverse(%d)\n", end->pos, end->len, end->cost, end->reverse);
+		// 	if (end->cost < begin->cost)
+		// 	{
+		// 		if (!end->reverse)
+		// 			ft_ps_resolve_end(ps, end, &i);
+		// 		else
+		// 			ft_ps_resolve_begin(ps, end, &i);
+		// 	}
+		// 	else
+		// 	{
+		// 		if (!begin->reverse)
+		// 			ft_ps_resolve_begin(ps, begin, &i);
+		// 		else
+		// 			ft_ps_resolve_end(ps, begin, &i);
+		// 	}
+		// 	(void)do_swap;
+		// }
+		// ft_ps_print_status();
+		// break ;
 	}
-	(void)ft_ps_resolve_begin;
-	(void)ft_ps_resolve_end;
 	ft_ps_print_status();
-	printf("op (%ld)\n", i);
+	printf("op (%zu)\n", i);
 }

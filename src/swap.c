@@ -1,31 +1,42 @@
 #include "push_swap.h"
 
-static void			swap(t_dlist *lst)
+static void			swap(t_clist *lst)
 {
-	t_dlist_it		*it;
-	t_dlist_it		*it2;
+	t_clist_it		*it;
+	t_clist_it		*it2;
 
 	if (lst->size > 1)
 	{
-		ft_dlist_pop_front(lst, &it);
-		ft_dlist_pop_front(lst, &it2);
-		ft_dlist_push_front(lst, it);
-		ft_dlist_push_front(lst, it2);
+		it = lst->pop_front(lst);
+		it2 = lst->pop_front(lst);
+		lst->push_front(lst, it)->push_front(lst, it2);
 	}
 }
 
 void				ft_ps_exec_swapa(void)
 {
-	swap(ft_ps_get_instance()->a);
+	static t_ps		*ps = 0;
+
+	if (!ps)
+		ps = ft_ps_get_instance();
+	swap(ps->a);
 }
 
 void				ft_ps_exec_swapb(void)
 {
-	swap(ft_ps_get_instance()->b);
+	static t_ps		*ps = 0;
+
+	if (!ps)
+		ps = ft_ps_get_instance();
+	swap(ps->b);
 }
 
 void				ft_ps_exec_swap_all(void)
 {
-	swap(ft_ps_get_instance()->a);
-	swap(ft_ps_get_instance()->b);
+	static t_ps		*ps = 0;
+
+	if (!ps)
+		ps = ft_ps_get_instance();
+	swap(ps->a);
+	swap(ps->b);
 }

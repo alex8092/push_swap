@@ -2,18 +2,24 @@
 
 void			ft_ps_exec_pusha(void)
 {
-	t_dlist_it	*it;
+	static t_ps		*ps = 0;
+	t_clist_it		*it;
 
-	ft_dlist_pop_front(ft_ps_get_instance()->b, &it);
+	if (!ps)
+		ps = ft_ps_get_instance();
+	it = ps->b->pop_front(ps->b);
 	if (it)
-		ft_dlist_push_front(ft_ps_get_instance()->a, it);
+		ps->a->push_front(ps->a, it);
 }
 
 void			ft_ps_exec_pushb(void)
 {
-	t_dlist_it	*it;
+	static t_ps		*ps = 0;
+	t_clist_it		*it;
 
-	ft_dlist_pop_front(ft_ps_get_instance()->a, &it);
+	if (!ps)
+		ps = ft_ps_get_instance();
+	it = ps->b->pop_front(ps->a);
 	if (it)
-		ft_dlist_push_front(ft_ps_get_instance()->b, it);
+		ps->a->push_front(ps->b, it);
 }

@@ -1,21 +1,23 @@
 #include "push_swap.h"
 #include "ft_dlist.h"
+#include <stdio.h>
 
-static t_dlist_it		*ft_ps_get_info_and_min(t_dlist *l)
+static t_clist_it		*ft_ps_get_info_and_min(t_clist *l)
 {
-	t_dlist_it	*min;
+	t_clist_it	*min;
 	ssize_t		max;
-	t_dlist_it	*current;
+	t_clist_it	*current;
 
-	current = l->begin;
+	current = l->current;
 	min = current;
 	max = ((ssize_t)current->value);
-	((t_lstinfo *)l->data)->min = ((ssize_t)min->value);
+	((t_lstinfo *)l->data)->min = max;
+	((t_lstinfo *)l->data)->max = max;
 	while (current)
 	{
 		if (((ssize_t)min->value) > ((ssize_t)current->value))
 		{
-			((t_lstinfo *)l->data)->min = ((ssize_t)min->value);
+			((t_lstinfo *)l->data)->min = ((ssize_t)current->value);
 			min = current;
 		}
 		if (max < ((ssize_t)current->value))
@@ -24,40 +26,26 @@ static t_dlist_it		*ft_ps_get_info_and_min(t_dlist *l)
 			((t_lstinfo *)l->data)->max = max;
 		}
 		current = current->next;
+		if (current == l->current)
+			break ;
 	}
 	return (min);
 }
 
-t_bool					ft_ps_is_sort(t_dlist *l)
+t_bool					ft_ps_is_sort(t_clist *l)
 {
-	int			count;
-	t_dlist_it	*start;
-	t_dlist_it	*current;
+	t_clist_it	*start;
+	t_clist_it	*current;
 
-	count = 0;
+	if (l->size == 0)
+		return (true);
 	start = ft_ps_get_info_and_min(l);
-	// printf("min (%ld)\n", ((ssize_t)start->value));
 	current = start;
-	while (true)
+	while (current && current->next != start)
 	{
-		if (!current->next)
-		{
-			if (l->begin == start)
-				break ;
-			if (((ssize_t)current->value) > ((ssize_t)l->begin->value))
-				return (false);
-			current = l->begin;
-		}
-		else
-		{
-			if (current->next == start)
-				break ;
-			if (((ssize_t)current->value) > ((ssize_t)current->next->value))
-				return (false);
-			current = current->next;
-		}
-		++count;
+		if ((ssize_t)current->next->value < ((ssize_t)current->value))
+			return (false);
+		current = current->next;
 	}
-	printf("count (%d)\n", count);
 	return (true);
 }

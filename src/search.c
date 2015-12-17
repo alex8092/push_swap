@@ -1,84 +1,42 @@
 #include "push_swap.h"
+#include <stdio.h>
 
-size_t			ft_ps_find_begin_anomaly(t_dlist *lst)
+t_search		*ft_ps_search_begin(t_clist *lst)
 {
-	t_dlist_it	*current;
-	size_t		op;
+	static t_search	data;
+	t_clist_it		*current;
 
-	op = 0;
-	current = lst->begin;
-	while (current)
+	current = lst->current;
+	ft_bzero((void *)&data, sizeof(t_search));
+	// if ((ssize_t)current->value == ((t_lstinfo *)lst->data)->max)
+	// {
+	// 	++data.pos;
+	// 	current = current->next;
+	// }
+	while (current && current->next != lst->current)
 	{
-		if (current->next)
-		{
-			if (((ssize_t)current->next->value) < ((ssize_t)current->value) && \
-				((ssize_t)current->value) != ((t_lstinfo *)lst->data)->max)
-				break ;
-			++op;
-		}
-		current = current->next;
-
-	}
-	return (op);
-}
-
-size_t			ft_ps_find_length_begin(t_dlist *lst, size_t n)
-{
-	t_dlist_it	*current;
-	size_t		i;
-
-	i = 0;
-	current = lst->begin;
-	while (i++ < n)
-		current = current->next;
-	i = 1;
-	while (current && current->next)
-	{
-		if (((ssize_t)current->next->value) > ((ssize_t)current->value))
+		if ((ssize_t)current->next->value < (ssize_t)current->value && \
+			(ssize_t)current->value != ((t_lstinfo *)lst->data)->max)
 			break ;
-		++i;
+		++data.pos;
 		current = current->next;
 	}
-	return (i);
+	return (ft_ps_length_begin(lst, &data));
 }
 
-size_t			ft_ps_find_length_end(t_dlist *lst, size_t n)
+t_search		*ft_ps_search_end(t_clist *lst)
 {
-	t_dlist_it	*current;
-	size_t		i;
+	static t_search	data;
+	t_clist_it		*current;
 
-	i = 0;
-	current = lst->end;
-	while (i++ < n)
-		current = current->prev;
-	i = 1;
-	while (current && current->prev)
+	current = lst->current->prev;
+	ft_bzero((void *)&data, sizeof(t_search));
+	while (current && current->prev != lst->current)
 	{
-		if (((ssize_t)current->prev->value) < ((ssize_t)current->value))
+		if ((ssize_t)current->prev->value > (ssize_t)current->value)
 			break ;
-		++i;
+		++data.pos;
 		current = current->prev;
 	}
-	return (i);
-}
-
-size_t			ft_ps_find_end_anomaly(t_dlist *lst)
-{
-	t_dlist_it	*current;
-	size_t		op;
-
-	op = 0;
-	current = lst->end;
-	while (current)
-	{
-		if (current->prev)
-		{
-			if (((ssize_t)current->prev->value) > ((ssize_t)current->value) && \
-				((ssize_t)current->value) != ((t_lstinfo *)lst->data)->min)
-				break ;
-			++op;
-		}
-		current = current->prev;
-	}
-	return (op);
+	return (ft_ps_length_end(lst, &data));
 }

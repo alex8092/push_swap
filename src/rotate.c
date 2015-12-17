@@ -1,26 +1,42 @@
 #include "push_swap.h"
 
-static void	rotate_list(t_dlist *lst, t_bool left)
+static void	rotate_list(t_clist *lst, t_bool left)
 {
-	ft_dlist_rotate(lst, left);
+	lst->rotate(lst, 1, left);
 }
 
 void	ft_ps_exec_rotatea(void)
 {
-	rotate_list(ft_ps_get_instance()->a, true);
+	static t_ps		*ps = 0;
+
+	if (!ps)
+		ps = ft_ps_get_instance();
+	rotate_list(ps->a, true);
 }
 
 void	ft_ps_exec_rotatea_reverse(void)
 {
-	rotate_list(ft_ps_get_instance()->a, false);
+	static t_ps		*ps = 0;
+
+	if (!ps)
+		ps = ft_ps_get_instance();
+	rotate_list(ps->a, false);
 }
 
 void	ft_ps_exec_rotateb(void)
 {
-	rotate_list(ft_ps_get_instance()->b, true);
+	static t_ps		*ps = 0;
+
+	if (!ps)
+		ps = ft_ps_get_instance();
+	rotate_list(ps->b, true);
 }
 
 void	ft_ps_exec_rotateb_reverse(void)
 {
-	rotate_list(ft_ps_get_instance()->b, false);
+	static t_ps		*ps = 0;
+
+	if (!ps)
+		ps = ft_ps_get_instance();
+	rotate_list(ps->b, false);
 }
