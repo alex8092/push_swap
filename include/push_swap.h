@@ -18,11 +18,12 @@ typedef struct		s_lstinfo
 */
 typedef struct		s_search
 {
-	size_t			pos;
-	size_t			len;
-	size_t			cost;
+	ssize_t			pos;
+	ssize_t			len;
+	ssize_t			cost;
 	t_bool			reverse;
-	t_clist_it		*current;
+	t_clist_it		*start;
+	t_clist_it		*end;
 }					t_search;
 
 /*
@@ -46,6 +47,8 @@ typedef struct		s_op
 ** reader.c
 */
 void				ft_ps_reader_parse_arg(char **av, int ac);
+void				ft_ps_print_l_search(t_clist *lst, const char *bef, \
+	t_search *s);
 
 /*
 ** print.c

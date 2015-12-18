@@ -4,39 +4,57 @@
 t_search		*ft_ps_search_begin(t_clist *lst)
 {
 	static t_search	data;
+	ssize_t			next;
+	ssize_t			cur;
+	ssize_t			bornes[2];
 	t_clist_it		*current;
 
 	current = lst->current;
 	ft_bzero((void *)&data, sizeof(t_search));
-	// if ((ssize_t)current->value == ((t_lstinfo *)lst->data)->max)
-	// {
-	// 	++data.pos;
-	// 	current = current->next;
-	// }
-	while (current && current->next != lst->current)
+	bornes[0] = ((t_lstinfo *)lst->data)->min;
+	bornes[1] = ((t_lstinfo *)lst->data)->max;
+	while (current->next != lst->current)
 	{
-		if ((ssize_t)current->next->value < (ssize_t)current->value && \
-			(ssize_t)current->value != ((t_lstinfo *)lst->data)->max)
-			break ;
+		next = (ssize_t)current->next->value;
+		cur = (ssize_t)current->value;
+		if (next < cur)
+		{
+			if (!(next == bornes[0] && cur == bornes[1]))
+				break ;
+		}
 		++data.pos;
 		current = current->next;
 	}
+	data.start = current;
 	return (ft_ps_length_begin(lst, &data));
+	// return (&data);
 }
 
 t_search		*ft_ps_search_end(t_clist *lst)
 {
 	static t_search	data;
+	ssize_t			prev;
+	ssize_t			cur;
+	ssize_t			bornes[2];
 	t_clist_it		*current;
 
-	current = lst->current->prev;
+	current = lst->current;
 	ft_bzero((void *)&data, sizeof(t_search));
-	while (current && current->prev != lst->current)
+	bornes[0] = ((t_lstinfo *)lst->data)->min;
+	bornes[1] = ((t_lstinfo *)lst->data)->max;
+	while (current->prev != lst->current)
 	{
-		if ((ssize_t)current->prev->value > (ssize_t)current->value)
-			break ;
+		prev = ((ssize_t)current->prev->value);
+		cur = ((ssize_t)current->value);
+		if (prev > cur)
+		{
+			if (!(prev == bornes[1] && cur == bornes[0]))
+				break ;
+		}
 		++data.pos;
 		current = current->prev;
 	}
+	data.start = current;
 	return (ft_ps_length_end(lst, &data));
+	// return (&data);
 }

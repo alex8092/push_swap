@@ -4,7 +4,7 @@
 static t_search		*cost_begin_reverse(t_clist *lst, t_search *info)
 {
 	const ssize_t	pos = lst->size - info->pos - info->len;
-	size_t			cost;
+	ssize_t			cost;
 
 	if (pos < 0)
 		return (info);
@@ -30,6 +30,8 @@ t_search			*ft_ps_cost_begin(t_clist *lst, t_search *info)
 	info->cost = info->pos;
 	if (info->len == 2 || info->len == 1)
 		++info->cost;
+	// else if (info->len == 3)
+	// 	info->cost += info->len + 2;
 	else
 		info->cost += info->len * 2;
 	(void)lst;
@@ -39,7 +41,7 @@ t_search			*ft_ps_cost_begin(t_clist *lst, t_search *info)
 static t_search		*cost_end_reverse(t_clist *lst, t_search *info)
 {
 	const ssize_t	pos = lst->size - (info->pos + info->len);
-	size_t			cost;
+	ssize_t			cost;
 
 	if (pos < 0)
 		return (info);
