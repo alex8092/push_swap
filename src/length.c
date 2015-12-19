@@ -6,41 +6,39 @@ t_search	*ft_ps_length_begin(t_clist *lst, t_search *info)
 	t_clist_it	*current;
 
 	current = info->start;
-	info->len = 1;
-	while (current->next != lst->current)
+	while ((ssize_t)current->prev->value > (ssize_t)current->value)
 	{
-		// printf("compare (%ld) - (%ld)\n", (ssize_t)current->next->value, (ssize_t)current->value);
-		if ((ssize_t)current->next->value > (ssize_t)current->value ||
-			(ssize_t)current->next->value == ((t_lstinfo *)lst->data)->min)
+		current = current->prev;
+		--info->pos;
+	}
+	info->start = current;
+	info->len = 1;
+	while (current->next != info->start)
+	{
+		if ((ssize_t)current->next->value > (ssize_t)current->value)
 			break ;
 		++info->len;
 		current = current->next;
 	}
-	current = info->start;
-	while (info->len < (ssize_t)lst->size - 1)
+	if (info->len == 3)
 	{
-		// printf("compare reverse (%ld) - (%ld)\n", (ssize_t)current->prev->value, (ssize_t)current->value);
-		if ((ssize_t)current->prev->value < (ssize_t)current->value ||
-			(ssize_t)current->prev->value == ((t_lstinfo *)lst->data)->max)
-			break ;
-		++info->len;
-		--info->pos;
-		current = current->prev;
-	}
-	info->end = current;
-	if (info->len == 1)
-	{
-		if ((ssize_t)info->end->value < (ssize_t)info->end->next->next->value)
-			++info->len;
-		else if ((ssize_t)info->end->value < (ssize_t)info->end->prev->value && \
-				(ssize_t)info->end->value > (ssize_t)info->end->prev->prev->value)
+		if ((ssize_t)current->value == ((t_lstinfo *)lst->data)->min &&
+			(ssize_t)info->start->value == ((t_lstinfo *)lst->data)->max)
 		{
-			--info->pos;
-			++info->len;
+			if ((ssize_t)info->start->prev->value < (ssize_t)info->start->next->value)
+			{
+				--info->len;
+				current = current->prev;
+			}
+			else
+			{
+				++info->pos;
+				--info->len;
+				info->start = info->start->next;
+			}
 		}
 	}
-	if (info->pos < 0)
-		info->pos += lst->size;
+	info->end = current;
 	return (ft_ps_cost_begin(lst, info));
 }
 
@@ -49,12 +47,37 @@ t_search	*ft_ps_length_end(t_clist *lst, t_search *info)
 	t_clist_it	*current;
 
 	current = info->start;
-	while (current->prev != lst->current)
+	while ((ssize_t)current->next->value < (ssize_t)current->value)
+	{
+		current = current->next;
+		--info->pos;
+	}
+	info->start = current;
+	info->len = 1;
+	while (current->prev != info->start)
 	{
 		if ((ssize_t)current->prev->value < (ssize_t)current->value)
 			break ;
 		++info->len;
 		current = current->prev;
+	}
+	if (info->len == 3)
+	{
+		if ((ssize_t)current->value == ((t_lstinfo *)lst->data)->max &&
+			(ssize_t)info->start->value == ((t_lstinfo *)lst->data)->min)
+		{
+			if ((ssize_t)info->start->next->value > (ssize_t)info->start->prev->value)
+			{
+				--info->len;
+				current = current->next;
+			}
+			else
+			{
+				++info->pos;
+				--info->len;
+				info->start = info->start->prev;
+			}
+		}
 	}
 	info->end = current;
 	return (ft_ps_cost_end(lst, info));

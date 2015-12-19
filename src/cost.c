@@ -30,8 +30,6 @@ t_search			*ft_ps_cost_begin(t_clist *lst, t_search *info)
 	info->cost = info->pos;
 	if (info->len == 2 || info->len == 1)
 		++info->cost;
-	// else if (info->len == 3)
-	// 	info->cost += info->len + 2;
 	else
 		info->cost += info->len * 2;
 	(void)lst;
