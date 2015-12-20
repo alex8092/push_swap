@@ -19,16 +19,43 @@
 
 static void	ft_push_to_b(t_ps *ps, size_t *c)
 {
-	ft_ps_is_sort(ps->b);
-	while (ps->b->size > 2 && (ssize_t)ps->b->current->value < (ssize_t)ps->a->current->value)
+	if (ps->b->size >= 2)
 	{
-		if ((ssize_t)ps->b->current->value == ((t_lstinfo *)ps->b->data)->min)
+		ft_ps_is_sort(ps->b);
+		if ((ssize_t)ps->a->current->value > ((t_lstinfo *)ps->b->data)->max)
 		{
-			if ((ssize_t)ps->b->current->prev->value < (ssize_t)ps->a->current->value)
-				break ;
+			while ((ssize_t)ps->b->current->value != ((t_lstinfo *)ps->b->data)->max)
+			{
+				ft_ps_do_op("rrb");
+				++(*c);
+			}
 		}
-		ft_ps_do_op("rrb");
-		++(*c);
+		else if ((ssize_t)ps->a->current->value < ((t_lstinfo *)ps->b->data)->min)
+		{
+			while ((ssize_t)ps->b->current->value != ((t_lstinfo *)ps->b->data)->min)
+			{
+				ft_ps_do_op("rb");
+				++(*c);
+			}
+			ft_ps_do_op("rrb");
+			++(*c);
+		}
+		else
+		{
+			while (true)
+			{
+				if ((ssize_t)ps->b->current->prev->value > (ssize_t)ps->a->current->value)
+				{
+					if ((ssize_t)ps->b->current->value < (ssize_t)ps->a->current->value)
+						break ;
+					else
+						ft_ps_do_op("rb");
+				}
+				else
+					ft_ps_do_op("rrb");
+				++(*c);
+			}
+		}
 	}
 	ft_ps_do_op("pb");
 	++(*c);
